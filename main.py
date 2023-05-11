@@ -21,6 +21,19 @@ from api.player import player_api
 from projects.projects import app_projects # Blueprint directory import projects definition
 
 
+""" 
+JWT test
+""" 
+
+from flask import jsonify, request, make_response
+import jwt 
+import datetime 
+from functools import wraps
+
+""" 
+"""
+
+
 # Initialize the SQLAlchemy object to work with the Flask app instance
 db.init_app(app)
 
@@ -30,6 +43,17 @@ app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(app_projects) # register app pages
+
+
+""" 
+JWT test
+""" 
+
+app.config['SECRET_KEY'] = 'secretkey'
+
+""" 
+""" 
+
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
@@ -43,6 +67,53 @@ def index():
 @app.route('/table/')  # connects /stub/ URL to stub() function
 def table():
     return render_template("table.html")
+
+""" 
+JWT testing
+"""
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 403
+
+        
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            #data = jwt.decode(token)
+        except:
+            return jsonify({'message': 'Token is invalid'}), 403 
+        
+        return f(*args, **kwargs)
+
+    return decorated
+
+@app.route('/unprotected')
+def unprotected():
+    return jsonify({'message': 'Anyone can view'})
+
+@app.route('/protected')
+@token_required
+def protected():
+    return jsonify({'message': 'Only for people with valid tokens'})
+
+@app.route('/login')
+def login():
+    auth = request.authorization 
+    
+    if auth and auth.password == 'password':
+        #token = jwt.encode({'user': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)})
+        token = jwt.encode({'user': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        #return jsonify({'token': token.decode('UTF-8')})
+        return jsonify({'token': token})
+    
+    return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+""" 
+"""
 
 @app.before_first_request
 def activate_job():  # activate these items 
