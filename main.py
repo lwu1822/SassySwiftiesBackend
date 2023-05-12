@@ -25,10 +25,11 @@ from projects.projects import app_projects # Blueprint directory import projects
 JWT test
 """ 
 
-from flask import jsonify, request, make_response
+from flask import jsonify, request, make_response, redirect
 import jwt 
 import datetime 
 from functools import wraps
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
 
 """ 
 """
@@ -50,6 +51,10 @@ JWT test
 """ 
 
 app.config['SECRET_KEY'] = 'secretkey'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+app.config['JWT_CSRF_CHECK_FORM'] = True
+jwt = JWTManager(app)
 
 """ 
 """ 
@@ -111,6 +116,29 @@ def login():
         return jsonify({'token': token})
     
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+@app.route('/testing')
+def testing():
+    access_token = create_access_token(identity=str("usertest"))
+    refresh_token = create_refresh_token(identity=str("usertest"))
+    resp = make_response(redirect("http://127.0.0.1:8086/", 302))
+    set_access_cookies(resp, access_token)
+    set_refresh_cookies(resp, refresh_token)
+    return resp
+"""
+def testing():
+    token = jwt.encode({'user': "testuser", 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+
+    data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+
+    responseObject = {
+        'status': 'success',
+        'message': 'Successful',
+        'auth_token': data
+    }
+    
+    return make_response(jsonify(responseObject)), 201
+"""
 
 """ 
 """
