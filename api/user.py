@@ -18,8 +18,8 @@ import datetime
 from functools import wraps
 
 
-from flask_cors import CORS
-CORS(app)
+# from flask_cors import CORS
+# CORS(app)
 
 
 """ 
