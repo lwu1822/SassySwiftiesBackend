@@ -5,6 +5,30 @@ from datetime import datetime
 
 from model.users import User
 
+""" 
+JWT test
+""" 
+
+from __init__ import app,db  # Definitions initialization
+#db.init_app(app)
+
+from flask import jsonify, request, make_response
+import jwt 
+import datetime 
+from functools import wraps
+
+""" 
+"""
+
+""" 
+JWT test
+""" 
+
+app.config['SECRET_KEY'] = 'secretkey'
+
+""" 
+""" 
+
 user_api = Blueprint('user_api', __name__,
                    url_prefix='/api/users')
 
@@ -79,9 +103,68 @@ class UserAPI:
             ''' authenticated user '''
             return jsonify(user.read())
 
+    class _Authentication(Resource):
+
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
             
+            ''' Get Data '''
+            uid = body.get('uid')
+            if uid is None or len(uid) < 1:
+                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+            password = body.get('password')
+            
+            ''' Find user '''
+            user = User.query.filter_by(_uid=uid).first()
+            if user is None or not user.is_password(password):
+                return {'message': f"Invalid user id or password"}, 400
+
+            
+            
+            token = jwt.encode({'user': uid, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            return jsonify({'token': token})
+            
+            
+            ''' authenticated user '''
+            #return jsonify(user.read())
+    
+    
+        """ 
+        JWT testing
+        """
+
+    class _Access(Resource):
+        def token_required(f):
+            @wraps(f)
+            def decorated(*args, **kwargs):
+                token = request.args.get('token')
+
+                if not token:
+                    return jsonify({'message': 'Token is missing'}), 403
+
+                
+                try:
+                    data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+                    #data = jwt.decode(token)
+                except:
+                    return jsonify({'message': 'Token is invalid'}), 403 
+                
+                return f(*args, **kwargs)
+
+            return decorated
+
+        @token_required
+        def get(self):
+            return jsonify({'message': 'Only for people with valid tokens'})
+
+
+        """ 
+        """
 
     # building RESTapi endpoint
     api.add_resource(_CRUD, '/')
     api.add_resource(_Security, '/authenticate')
+    api.add_resource(_Authentication, '/login')
+    api.add_resource(_Access, '/access')
     
