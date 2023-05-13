@@ -121,7 +121,7 @@ def login():
 def testing():
     access_token = create_access_token(identity=str("usertest"))
     refresh_token = create_refresh_token(identity=str("usertest"))
-    resp = make_response(redirect("http://127.0.0.1:8086/", 302))
+    resp = make_response(redirect("http://swifties.duckdns.org/", 302))
     set_access_cookies(resp, access_token)
     set_refresh_cookies(resp, refresh_token)
     return resp
