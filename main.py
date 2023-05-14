@@ -25,11 +25,14 @@ from projects.projects import app_projects # Blueprint directory import projects
 JWT test
 """ 
 
-from flask import jsonify, request, make_response, redirect
+from flask import jsonify, request, make_response, redirect, session
 import jwt 
 import datetime 
 from functools import wraps
 from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
+from flask_session import Session 
+import os
+from __init__ import ApplicationConfig
 
 """ 
 """
@@ -50,14 +53,24 @@ app.register_blueprint(app_projects) # register app pages
 JWT test
 """ 
 
+"""
 app.config['SECRET_KEY'] = 'secretkey'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['JWT_CSRF_CHECK_FORM'] = True
+
 jwt = JWTManager(app)
+
+server_session = Session(app)
+SECRET_KEY = "a"
+
+app.config.from_object(ApplicationConfig)
+"""
 
 """ 
 """ 
+
+
 
 
 @app.errorhandler(404)  # catch for URL not found
@@ -119,12 +132,19 @@ def login():
 
 @app.route('/testing')
 def testing():
+
+    session["user_id"] = "a"
+    
+    return jsonify({"id": "a"})
+    
+    """
     access_token = create_access_token(identity=str("usertest"))
     refresh_token = create_refresh_token(identity=str("usertest"))
     resp = make_response(redirect("http://swifties.duckdns.org/", 302))
     set_access_cookies(resp, access_token)
     set_refresh_cookies(resp, refresh_token)
     return resp
+    """
 """
 def testing():
     token = jwt.encode({'user': "testuser", 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
