@@ -32,7 +32,7 @@ from functools import wraps
 from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
 from flask_session import Session 
 import os
-from __init__ import ApplicationConfig
+#from __init__ import ApplicationConfig
 
 """ 
 """
