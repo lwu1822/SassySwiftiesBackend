@@ -53,7 +53,7 @@ app.register_blueprint(app_projects) # register app pages
 JWT test
 """ 
 
-"""
+
 app.config['SECRET_KEY'] = 'secretkey'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
@@ -61,6 +61,7 @@ app.config['JWT_CSRF_CHECK_FORM'] = True
 
 jwt = JWTManager(app)
 
+"""
 server_session = Session(app)
 SECRET_KEY = "a"
 
@@ -132,9 +133,20 @@ def login():
 
 @app.route('/testing')
 def testing():
+    access_token = create_access_token(identity=str("usertest"))
+    refresh_token = create_refresh_token(identity=str("usertest"))
+    resp = make_response(redirect("http://swifties.duckdns.org/", 302))
+    set_access_cookies(resp, access_token)
+    set_refresh_cookies(resp, refresh_token)
+    return jsonify( {
+        "id": access_token
+    })
+
+    """
     return jsonify( {
         "id": session.get("user_id")
     })
+    """ 
 
     """
     session["user_id"] = "a"
