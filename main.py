@@ -132,11 +132,15 @@ def login():
 
 @app.route('/testing')
 def testing():
+    return jsonify( {
+        "id": session.get("user_id")
+    })
 
+    """
     session["user_id"] = "a"
     
     return jsonify({"id": "a"})
-
+    """
 
 @app.route("/testlogin", methods=["POST"])
 def login_user():
