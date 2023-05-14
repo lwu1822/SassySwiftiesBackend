@@ -136,6 +136,17 @@ def testing():
     session["user_id"] = "a"
     
     return jsonify({"id": "a"})
+
+
+@app.route("/testlogin", methods=["POST"])
+def login_user():
+  
+    
+    session["user_id"] = "a"
+
+    return jsonify({
+        "id": "a"
+    })
     
     """
     access_token = create_access_token(identity=str("usertest"))
