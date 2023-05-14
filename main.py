@@ -149,7 +149,7 @@ def login_user():
     session["user_id"] = "a"
 
     return jsonify({
-        "id": "a"
+        "id": session["user_id"]
     })
     
     """
