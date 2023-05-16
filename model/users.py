@@ -163,7 +163,58 @@ class User(db.Model):
 
 """Database Creation and Testing """
 
+class Post(db.Model):
+    __tablename__ = 'posts'
 
+    # Define the Notes schema
+    id = db.Column(db.Integer, primary_key=True)
+    note = db.Column(db.Text, unique=False, nullable=False)
+    image = db.Column(db.String, unique=False)
+    
+    # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
+    userID = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    # Constructor of a Notes object, initializes of instance variables within object
+    def __init__(self, id, note, image):
+        self.userID = id
+        self.note = note
+        self.image = image
+
+    # Returns a string representation of the Notes object, similar to java toString()
+    # returns string
+    def __repr__(self):
+        return "Notes(" + str(self.id) + "," + self.note + "," + str(self.userID) + ")"
+
+    # CRUD create, adds a new record to the Notes table
+    # returns the object added or None in case of an error
+    def create(self):
+        try:
+            # creates a Notes object from Notes(db.Model) class, passes initializers
+            db.session.add(self)  # add prepares to persist person object to Notes table
+            db.session.commit()  # SqlAlchemy "unit of work pattern" requires a manual commit
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+
+    # CRUD read, returns dictionary representation of Notes object
+    # returns dictionary
+    def read(self):
+        # encode image
+        path = app.config['UPLOAD_FOLDER']
+        file = os.path.join(path, self.image)
+        file_text = open(file, 'rb')
+        file_read = file_text.read()
+        file_encode = base64.encodebytes(file_read)
+        
+        return {
+            "id": self.id,
+            "userID": self.userID,
+            "note": self.note,
+            "image": self.image,
+            "base64": str(file_encode)
+        }
+    
 # Builds working data for testing
 def initUsers():
     with app.app_context():
