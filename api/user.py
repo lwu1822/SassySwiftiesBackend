@@ -162,7 +162,7 @@ class UserAPI:
         """
 
     # building RESTapi endpoint
-    api.add_resource(_CRUD, '/')
+    api.add_resource(_CRUD, '/account')
     api.add_resource(_Security, '/authenticate')
     api.add_resource(_Authentication, '/login')
     api.add_resource(_Access, '/access')
