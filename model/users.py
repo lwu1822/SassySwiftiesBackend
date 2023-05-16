@@ -74,47 +74,43 @@ class User(db.Model):
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=False, nullable=False)
-    password = db.Column(db.String(255), unique=False, nullable=False)
+    _username = db.Column(db.String(255), unique=False, nullable=False)
+    _password = db.Column(db.String(255), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
     def __init__(self, username, password):
-        self.username = username    # variables with self prefix become part of the object, 
-        self.password = password
+        self._username = username    # variables with self prefix become part of the object, 
+        self._password = password
 
     # a name getter method, extracts name from object
     @property
     def username(self):
-        return self.username
+        return self._username
     
     # a setter function, allows name to be updated after initial object creation
     @username.setter
-    def name(self, username):
-        self.username = username
-    
-    @property
-    def password(self):
-        return self.password
+    def username(self, username):
+        self._username = username
        
     @property
     def password(self):
-        return self.password[0:10] + "..." # because of security only show 1st characters
+        return self._password[0:10] + "..." # because of security only show 1st characters
 
     @password.setter
     def password(self, password):
-        self.password = password
+        self._password = password
 
     # check password parameter versus stored/encrypted password
     def is_password(self, password):
         """Check against hashed password."""
-        result = check_password_hash(self.password, password)
+        result = check_password_hash(self._password, password)
         return result
     
 
-    
+
     # output content using str(object) in human readable form, uses getter
     # output content using json dumps, this is ready for API response
     def __str__(self):
@@ -222,8 +218,8 @@ def initUsers():
         db.create_all()
         """Tester data for table"""
         u1 = User(username='jesa06', password='123Ellyna4')
-        u2 = User(name='Lwu', password='sassy')
-        u3 = User(name='collin07', password='iloveorlando')
+        u2 = User(username='Lwu', password='sassy')
+        u3 = User(username='collin07', password='iloveorlando')
 
         users = [u1, u2, u3]
 

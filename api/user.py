@@ -95,7 +95,7 @@ class UserAPI:
             password = body.get('password')
             
             ''' Find user '''
-            user = User.query.filter_by(username=username).first()
+            user = User.query.filter_by(_username=username).first()
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
             
@@ -115,13 +115,13 @@ class UserAPI:
             password = body.get('password')
             
             ''' Find user '''
-            user = User.query.filter_by(username=username).first()
+            user = User.query.filter_by(_username=username).first()
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
 
             
             
-            token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
             return jsonify({'token': token})
             
             
