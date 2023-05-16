@@ -49,32 +49,25 @@ class UserAPI:
             
             ''' Avoid garbage in, error checking '''
             # validate name
-            name = body.get('name')
-            if name is None or len(name) < 2:
-                return {'message': f'Name is missing, or is less than 2 characters'}, 400
+            username = body.get('username')
+            if username is None or len(username) < 2:
+                return {'message': f'Username is missing, or is less than 2 characters'}, 400
             # validate uid
-            uid = body.get('uid')
-            if uid is None or len(uid) < 2:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+           
             # look for password and dob
             password = body.get('password')
-            dob = body.get('dob')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, 
-                      uid=uid)
+            uo = User(username=username,
+                    password=password)
             
             ''' Additional garbage error checking '''
             # set password if provided
             if password is not None:
-                uo.set_password(password)
+                uo.password = password
             # convert to date type
-            if dob is not None:
-                try:
-                    uo.dob = dt.strptime(dob, '%Y-%m-%d').date()
-                except:
-                    return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 400
             
+    
             ''' #2: Key Code block to add user to database '''
             # create user in database
             user = uo.create()
@@ -82,7 +75,7 @@ class UserAPI:
             if user:
                 return jsonify(user.read())
             # failure returns error
-            return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
+            return {'message': f'Processed {username}, either a format error or username: {username} is duplicate'}, 400
 
         def get(self): # Read Method
             users = User.query.all()    # read/extract all users from database
@@ -96,13 +89,13 @@ class UserAPI:
             body = request.get_json()
             
             ''' Get Data '''
-            uid = body.get('uid')
-            if uid is None or len(uid) < 2:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+            username = body.get('username')
+            if username is None or len(username) < 2:
+                return {'message': f'Username is missing, or is less than 2 characters'}, 400
             password = body.get('password')
             
             ''' Find user '''
-            user = User.query.filter_by(_uid=uid).first()
+            user = User.query.filter_by(username=username).first()
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
             
@@ -116,19 +109,19 @@ class UserAPI:
             body = request.get_json()
             
             ''' Get Data '''
-            uid = body.get('uid')
-            if uid is None or len(uid) < 1:
-                return {'message': f'User ID is missing, or is less than 2 characters'}, 400
+            username = body.get('username')
+            if username is None or len(username) < 1:
+                return {'message': f'Username is missing, or is less than 2 characters'}, 400
             password = body.get('password')
             
             ''' Find user '''
-            user = User.query.filter_by(_uid=uid).first()
+            user = User.query.filter_by(username=username).first()
             if user is None or not user.is_password(password):
                 return {'message': f"Invalid user id or password"}, 400
 
             
             
-            token = jwt.encode({'user': uid, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
             return jsonify({'token': token})
             
             
