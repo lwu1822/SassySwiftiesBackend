@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 
-from model.users import FdPost
+from model.users import Post
 
 # Blueprint used to create an application instance
 messageboard_api = Blueprint('messageboard_api', __name__,
