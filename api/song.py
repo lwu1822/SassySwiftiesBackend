@@ -3,53 +3,53 @@ from flask_restful import Api, Resource # used for REST API building
 import requests  # used for testing 
 import random
 
-from model.jokes import *
+from model.songs import *
 
-joke_api = Blueprint('joke_api', __name__,
-                   url_prefix='/api/jokes')
+songs_api = Blueprint('songs_api', __name__,
+                   url_prefix='/api/songs')
 
 # API generator https://flask-restful.readthedocs.io/en/latest/api.html#id1
-api = Api(joke_api)
+api = Api(songs_api)
 
-class JokesAPI:
+class SongsAPI:
     # not implemented
     class _Create(Resource):
-        def post(self, joke):
+        def post(self, song):
             pass
             
     # getJokes()
     class _Read(Resource):
         def get(self):
-            return jsonify(getJokes())
+            return jsonify(getSongs())
 
     # getJoke(id)
     class _ReadID(Resource):
         def get(self, id):
-            return jsonify(getJoke(id))
+            return jsonify(getSong(id))
 
     # getRandomJoke()
     class _ReadRandom(Resource):
         def get(self):
-            return jsonify(getRandomJoke())
+            return jsonify(getRandomSong())
     
     # getRandomJoke()
     class _ReadCount(Resource):
         def get(self):
-            count = countJokes()
+            count = countSongs()
             countMsg = {'count': count}
             return jsonify(countMsg)
 
     # put method: addJokeHaHa
     class _UpdateLike(Resource):
         def put(self, id):
-            addJokeHaHa(id)
-            return jsonify(getJoke(id))
+            addSongLike(id)
+            return jsonify(getSong(id))
 
     # put method: addJokeBooHoo
-    class _UpdateJeer(Resource):
+    class _UpdateDislike(Resource):
         def put(self, id):
-            addJokeBooHoo(id)
-            return jsonify(getJoke(id))
+            addSongDislike(id)
+            return jsonify(getSong(id))
 
     # building RESTapi resources/interfaces, these routes are added to Web Server
     api.add_resource(_Create, '/create/<string:joke>')
@@ -58,12 +58,12 @@ class JokesAPI:
     api.add_resource(_ReadRandom, '/random')
     api.add_resource(_ReadCount, '/count')
     api.add_resource(_UpdateLike, '/like/<int:id>')
-    api.add_resource(_UpdateJeer, '/jeer/<int:id>')
+    api.add_resource(_UpdateDislike, '/dislike/<int:id>')
     
 if __name__ == "__main__": 
     # server = "http://127.0.0.1:5000" # run local
-    server = 'https://flask.nighthawkcodingsociety.com' # run from web
-    url = server + "/api/jokes"
+    server = 'https://lwu1822.github.io/SassySwiftiesFrontend/' # run from web
+    url = server + "/api/songs"
     responses = []  # responses list
 
     # get count of jokes on server
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         requests.put(url+"/like/"+num) # add to like count
         ) 
     responses.append(
-        requests.put(url+"/jeer/"+num) # add to jeer count
+        requests.put(url+"/dislike/"+num) # add to jeer count
         ) 
 
     # obtain a random joke
