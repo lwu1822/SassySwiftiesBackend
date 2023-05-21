@@ -122,6 +122,16 @@ def unprotected():
 def protected():
     return jsonify({'message': 'Only for people with valid tokens'})
 
+
+@app.route('/tokentest')
+def tokentest():
+    token = request.args.get('token')
+
+    data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+    print(data)
+
+    return jsonify({"test": "test"})
+
 @app.route('/login')
 def login():
     auth = request.authorization 
