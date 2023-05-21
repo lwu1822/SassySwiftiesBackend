@@ -167,8 +167,13 @@ def initUsers():
         u1 = User(username='jesa06', password='123Ellyna4')
         u2 = User(username='Lwu', password='sassy')
         u3 = User(username='collin07', password='iloveorlando')
+        u4 = User(username='orlando23', password='four')
+        u5 = User(username='leonard!', password='123code')
+        u6 = User(username='yeung', password='twsifty')
+        u7 = User(username='mmort', password='codecodecode')
+        u8 = User(username='sssachit', password='greenring')
 
-        users = [u1, u2, u3]
+        users = [u1, u2, u3, u4, u5, u6, u7, u8]
 
         """Builds sample user/note(s) data"""
         for user in users:

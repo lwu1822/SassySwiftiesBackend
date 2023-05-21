@@ -56,11 +56,13 @@ JWT test
 
 
 app.config['SECRET_KEY'] = 'secretkey'
+""" 
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['JWT_CSRF_CHECK_FORM'] = True
 
 jwt = JWTManager(app)
+""" 
 
 """
 server_session = Session(app)
@@ -132,6 +134,7 @@ def login():
     
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
+"""
 @app.route('/testing')
 def testing():
     access_token = create_access_token(identity=str("usertest"))
@@ -142,18 +145,19 @@ def testing():
     return jsonify( {
         "id": access_token
     })
+""" 
 
-    """
+"""
     return jsonify( {
         "id": session.get("user_id")
     })
-    """ 
+""" 
 
-    """
+"""
     session["user_id"] = "a"
     
     return jsonify({"id": "a"})
-    """
+"""
 
 @app.route("/testlogin", methods=["POST"])
 def login_user():
