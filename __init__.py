@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 """ 
 JWT test
 """ 
-import redis
+#import redis
 
 """ 
 """
