@@ -130,7 +130,7 @@ def tokentest():
     data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
     print(data)
 
-    return jsonify({"test": "test"})
+    return jsonify({"test": data})
 
 @app.route('/login')
 def login():
