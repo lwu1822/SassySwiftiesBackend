@@ -2,7 +2,7 @@ import random
 
 song_data = []
 song_list = [
-    "Tim McGraw"
+    "Tim McGraw",
     "Picture to Burn",
     "Teardrops on My Guitar",
     "A Place in This World",
