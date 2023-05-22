@@ -35,7 +35,7 @@ class FdPostAPI(Resource):
                 return {'message': f'imageURL is missing'}, 210
            
             ''' Create FdPost instance '''
-            uo = FdPost(title=title, text=text, imageURL=imageURL)
+            uo = Post(title=title, text=text, imageURL=imageURL)
             
             ''' Additional input error checking '''
 
@@ -52,7 +52,7 @@ class FdPostAPI(Resource):
     # Read post
     class _Read(Resource):
         def get(self):
-            posts = FdPost.query.all()    # read/extract all posts from database
+            posts = Post.query.all()    # read/extract all posts from database
             json_ready = [post.read() for post in posts]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
@@ -64,7 +64,7 @@ class FdPostAPI(Resource):
             if id is None:
                 return {'message': f'id {id} is missing'}, 400
         
-            post = FdPost.query.filter_by(id=id).first()
+            post = Post.query.filter_by(id=id).first()
             if post is None:
                 return {'message': f'post not found'}, 404
 
@@ -78,7 +78,7 @@ class FdPostAPI(Resource):
             if id is None:
                 return {'message': f'id {id} is missing'}, 400
         
-            post = FdPost.query.filter_by(id=id).first()
+            post = Post.query.filter_by(id=id).first()
             if post is None:
                 return {'message': f'post not found'}, 404
             
