@@ -160,10 +160,18 @@ class UserAPI:
 
         """ 
         """
+    
+    class _Test(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+        def get(self): # Read Method
+            users = User.query.all()    # read/extract all users from database
+            json_ready = [user.read() for user in users]  # prepare output in json
+            return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+    
 
     # building RESTapi endpoint
     api.add_resource(_CRUD, '/')
     api.add_resource(_Security, '/authenticate')
     api.add_resource(_Authentication, '/login')
     api.add_resource(_Access, '/access')
+    api.add_resource(_Test, '/test')
     
