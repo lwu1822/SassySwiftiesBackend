@@ -2,10 +2,13 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 
 from model.users import Post
+from model.users import User
+
+from datetime import datetime
 
 # Blueprint used to create an application instance
 messageboard_api = Blueprint('messageboard_api', __name__,
-                   url_prefix='/api/fd')
+                   url_prefix='/api/posts')
 
 # Initializing Flask-RESTful API
 # API docs https://flask-restful.readthedocs.io/en/latest/api.html
@@ -19,28 +22,44 @@ class FdPostAPI(Resource):
         def post(self):
             ''' Read data from json body '''
             body = request.get_json()
-            
             ''' Validate input data '''
             # validate name
             title = body.get('title')
-            if title is None or len(title) < 2 or len(title) > 30:
-                return {'message': f'Name is missing, or is less than 2 characters, or is more than 30 characters'}, 210
+            if title is None or len(title) < 2 or len(title) > 50:
+                return {'message': f'Name is missing, is less than 2 characters, or is more than 50 characters'}, 400
             # validate uid
             text = body.get('text')
-            if text is None or len(text) < 2 or len(text) > 800:
-                return {'message': f'Text is missing, or is less than 2 characters, or is more than 800 characters'}, 210
-            # validate imageURL
-            imageURL = body.get('imageURL')
-            if imageURL is None:
-                return {'message': f'imageURL is missing'}, 210
-           
-            ''' Create FdPost instance '''
-            uo = Post(title=title, text=text, imageURL=imageURL)
+            if text is None or len(text) < 2 or len(text) > 500:
+                return {'message': f'Text is missing, is less than 2 characters, or is more than 500 characters'}, 400
             
-            ''' Additional input error checking '''
+            # validate user
+            userID = body.get('userID')
+            if userID is None:
+                return {'message': f'userID is missing'}, 400
+            
+           
+            ''' Get user from id given'''
+            user = User.query.filter_by(id=userID).first()
+            if user is None:
+                return {'message': f'Id {id} does not represent a user'}, 400
+            
+            username = user.username
+            if username is None:
+                return {'message': f'Requested user at id {id} does not have a username'}, 400
 
+            # image = user.get('profile')
+            image = 0
+            
+            uo = Post(
+                title=title,
+                note=text,
+                date=datetime.now().strftime('%Y/%m/%d'),
+                username=username,
+                image=image,
+            )
             
             ''' Create post in database '''
+
             # create post in database
             post = uo.create()
             # success returns json of post
