@@ -48,7 +48,7 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        self._password = password
+        self._password = generate_password_hash(password, method='sha256')
 
     # check password parameter versus stored/encrypted password
     def is_password(self, password):
