@@ -35,7 +35,7 @@ app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']  # supported file typ
 app.config['UPLOAD_FOLDER'] = 'volumes/uploads/'  # location of user uploaded content
 
 
-app.config['PROPAGATE_EXCEPTIONS'] = True
+#app.config['PROPAGATE_EXCEPTIONS'] = True
 
 """ 
 JWT test 
