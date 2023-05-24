@@ -56,7 +56,7 @@ JWT test
 
 
 app.config['SECRET_KEY'] = 'secretkey'
-app.config['PROPAGATE_EXCEPTIONS'] = True
+#app.config['PROPAGATE_EXCEPTIONS'] = True
 
 """ 
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
