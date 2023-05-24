@@ -29,7 +29,7 @@ from flask import jsonify, request, make_response, redirect, session
 #import jwt 
 import datetime 
 from functools import wraps
-from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
 from flask_session import Session 
 import os
 #from __init__ import ApplicationConfig
@@ -160,6 +160,12 @@ def testing():
     return jsonify( {
         "id": access_token
     })
+
+@app.route('/decode')
+def decode():
+    decoded = decode_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NDg5OTYzNSwianRpIjoiMWM3Mzk0ZDEtZTAzOS00ZjA4LTllNzMtYjg2Y2U4MjIyYWJjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InVzZXJ0ZXN0IiwibmJmIjoxNjg0ODk5NjM1LCJjc3JmIjoiMDNjNmVjMzctZWFmNi00OTdkLTk5YjktOTE5MGI0NmUzOWRiIiwiZXhwIjoxNjg0OTAwNTM1fQ.jkQNOCdxZENH5JUAnNS8T7aREBEU_-1SyeEvxxMQ_p8")
+
+    return jsonify({"test": decoded})
 
 
 """
