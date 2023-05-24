@@ -17,6 +17,7 @@ import jwt
 import datetime 
 from functools import wraps
 
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
 
 from flask_cors import CORS
 CORS(app)
@@ -31,7 +32,11 @@ JWT test
 """ 
 
 app.config['SECRET_KEY'] = 'secretkey'
-app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+app.config['JWT_CSRF_CHECK_FORM'] = True
+
+jwt = JWTManager(app)
 
 """ 
 """ 
@@ -134,45 +139,47 @@ class UserAPI:
         JWT testing
         """
 
-    class _Access(Resource):
-        def token_required(f):
-            @wraps(f)
-            def decorated(*args, **kwargs):
-                token = request.args.get('token')
+    class _Login(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            username = body.get('username')
+            
+            
+            access_token = create_access_token(identity=str(username))
 
-                if not token:
-                    return jsonify({'message': 'Token is missing'}), 403
+            return jsonify( {
+                "id": access_token
+            })
 
-                
-                try:
-                    data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-                    #data = jwt.decode(token)
-                except:
-                    return jsonify({'message': 'Token is invalid'}), 403 
-                
-                return f(*args, **kwargs)
+    class _Info(Resource):
+        def post(self):
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Get Data '''
+            token = body.get('token')
+            
+            decoded = decode_token(token)
 
-            return decorated
+            return jsonify( 
+                decoded 
+            )
 
-        @token_required
-        def get(self):
-            return jsonify({'message': 'Only for people with valid tokens'})
+
 
 
         """ 
         """
-    
-    class _Test(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
-        def get(self): # Read Method
-            users = User.query.all()    # read/extract all users from database
-            json_ready = [user.read() for user in users]  # prepare output in json
-            return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
+
     
 
     # building RESTapi endpoint
     api.add_resource(_CRUD, '/')
     api.add_resource(_Security, '/authenticate')
-    api.add_resource(_Authentication, '/login')
-    api.add_resource(_Access, '/access')
-    api.add_resource(_Test, '/test')
+    api.add_resource(_Authentication, '/access')
+    api.add_resource(_Login, '/login')
+    api.add_resource(_Info, '/info')
     
