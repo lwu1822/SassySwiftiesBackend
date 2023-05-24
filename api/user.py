@@ -31,6 +31,7 @@ JWT test
 """ 
 
 app.config['SECRET_KEY'] = 'secretkey'
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 """ 
 """ 
