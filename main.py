@@ -11,11 +11,11 @@ from model.players import initPlayers
 
 
 # setup APIs
-# from api.covid import covid_api # Blueprint import api definition
-# from api.song import songs_api # Blueprint import api definition
-# from api.user import user_api # Blueprint import api definition
-# from api.player import player_api
-# from api.messageboard import messageboard_api
+from api.covid import covid_api # Blueprint import api definition
+from api.song import songs_api # Blueprint import api definition
+from api.user import user_api # Blueprint import api definition
+from api.player import player_api
+from api.messageboard import messageboard_api
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
@@ -26,10 +26,10 @@ JWT test
 """ 
 
 from flask import jsonify, request, make_response, redirect, session
-import jwt 
+#import jwt 
 import datetime 
 from functools import wraps
-#from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies)
 from flask_session import Session 
 import os
 #from __init__ import ApplicationConfig
@@ -42,11 +42,11 @@ import os
 db.init_app(app)
 
 # register URIs
-# app.register_blueprint(songs_api) # register api routes
-# app.register_blueprint(covid_api) # register api routes
-# app.register_blueprint(user_api) # register api routes
-# app.register_blueprint(player_api)
-# app.register_blueprint(messageboard_api)
+app.register_blueprint(songs_api) # register api routes
+app.register_blueprint(covid_api) # register api routes
+app.register_blueprint(user_api) # register api routes
+app.register_blueprint(player_api)
+app.register_blueprint(messageboard_api)
 app.register_blueprint(app_projects) # register app pages
 
 
@@ -58,13 +58,13 @@ JWT test
 app.config['SECRET_KEY'] = 'secretkey'
 #app.config['PROPAGATE_EXCEPTIONS'] = True
 
-""" 
+
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['JWT_CSRF_CHECK_FORM'] = True
 
 jwt = JWTManager(app)
-""" 
+
 
 """
 server_session = Session(app)
@@ -95,7 +95,7 @@ def table():
 """ 
 JWT testing
 """
-
+"""
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -148,8 +148,8 @@ def login():
         return jsonify({'token': token})
     
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
 """
+
 @app.route('/testing')
 def testing():
     access_token = create_access_token(identity=str("usertest"))
@@ -160,7 +160,7 @@ def testing():
     return jsonify( {
         "id": access_token
     })
-""" 
+
 
 """
     return jsonify( {
