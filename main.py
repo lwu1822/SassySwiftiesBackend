@@ -131,7 +131,7 @@ def tokentest():
     #token = request.args.get('token')
 
     #data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-    data = jwt.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYSIsImV4cCI6MTY4NDk3NzYxOX0.ZEhwSETz2QcEZPOSQgnqp0rU2Qmxs9LuwNEeFXB7QNc", app.config['SECRET_KEY'], algorithms=['HS256'])
+    data = jwt.decode("sdfsdf", app.config['SECRET_KEY'], algorithms=['HS256'])
     #print(data)
 
     return jsonify({"test": data})
