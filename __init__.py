@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 """ 
-JWT test
+JWT testbrew --version
 """ 
 #import redis
 

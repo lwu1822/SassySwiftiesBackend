@@ -48,7 +48,7 @@ user_api = Blueprint('user_api', __name__,
 api = Api(user_api)
 
 class UserAPI:        
-    class _CRUD(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+    class _CRUD(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemented
         def post(self): # Create method
             ''' Read data for json body '''
             body = request.get_json()
@@ -120,13 +120,13 @@ class UserAPI:
             ''' Get Data '''
             username = body.get('username')
             if username is None or len(username) < 1:
-                return {'message': f'Username is missing, or is less than 2 characters'}, 400
+                return {'message': f'Username is missing, or is less than 1 character'}, 400
             password = body.get('password')
             
             ''' Find user '''
             user = User.query.filter_by(_username=username).first()
-            if user is None or not user.is_password(password):
-                return {'message': f"Invalid user id or password"}, 400
+            if not user.is_password(password):
+                return {'message': f"Invalid username or password"}, 400
 
             
             

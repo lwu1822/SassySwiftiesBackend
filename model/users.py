@@ -51,10 +51,24 @@ class User(db.Model):
         self._password = generate_password_hash(password, method='sha256')
 
     # check password parameter versus stored/encrypted password
-    def is_password(self, password):
-        """Check against hashed password."""
-        result = check_password_hash(self._password, password)
-        return result
+    #def is_password(self, password):
+     #   """Check against hashed password."""
+      #  result = check_password(self._password, password)
+      #  return result
+
+    def find_by_username(username):
+        with app.app_context():
+            user = User.query.filter_by(_username=username).first()
+        return user
+
+   # def check_credentials(username, password):
+    # query email and return user record
+      #  user = find_by_username(username)
+      #  if user == None:
+      #      return False
+     #   if (user.is_password(password)):
+      #      return True
+      #  return False
     
 
 
