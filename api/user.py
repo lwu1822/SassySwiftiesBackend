@@ -60,7 +60,7 @@ class UserAPI:
                 return {'message': f'Username is missing, or is less than 2 characters'}, 400
             # validate username
             #dupuser = User.query.filter_by(_username=username)
-            #if dupuser
+            #if dupuser = username
               #return {'message': f'Duplicate Username Detected'}, 400
           
             # look for password and dob
