@@ -58,8 +58,11 @@ class UserAPI:
             username = body.get('username')
             if username is None or len(username) < 2:
                 return {'message': f'Username is missing, or is less than 2 characters'}, 400
-            # validate uid
-           
+            # validate username
+            #dupuser = User.query.filter_by(_username=username)
+            #if dupuser
+              #return {'message': f'Duplicate Username Detected'}, 400
+          
             # look for password and dob
             password = body.get('password')
 
