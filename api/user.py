@@ -139,14 +139,14 @@ class UserAPI:
         JWT testing
         """
 
-    class _Login(Resource):
+    class _Login(Resource): # This is currently broken; accepts any set of login credentials. Authentication function is in progress
         def post(self):
             ''' Read data for json body '''
             body = request.get_json()
             
             ''' Get Data '''
             username = body.get('username')
-            
+            password = body.get('password')
             
             access_token = create_access_token(identity=str(username))
 
