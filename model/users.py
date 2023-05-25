@@ -44,7 +44,7 @@ class User(db.Model):
        
     @property
     def password(self):
-        return self._password[0:10] + "..." # because of security only show 1st characters
+        return self._password 
 
     @password.setter
     def password(self, password):

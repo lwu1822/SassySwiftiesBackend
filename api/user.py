@@ -22,7 +22,7 @@ from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_
 from flask_cors import CORS
 CORS(app)
 
-#comment
+from werkzeug.security import generate_password_hash, check_password_hash
 
 """ 
 """
@@ -154,14 +154,20 @@ class UserAPI:
             
             
             dbUser = User.query.filter_by(_username=username).first()
-            dbUsername = dbUser.username
 
-            if dbUsername == username:
-                print("hi")
-                print("password: " + str(dbUser.passwordCheck()))
             
-            if dbUser is None or dbUser.password != password:
-                return {'message': f"Invalid user id or password"}, 400
+            if dbUser is None:
+                return {'message': f"Invalid user id"}, 400
+
+            
+            dbUsername = dbUser.username
+            dbPassword = dbUser.password
+
+            if not check_password_hash(dbPassword, password):
+                return {'message': f"Invalid password"}, 400
+            
+
+
 
             access_token = create_access_token(identity=str(username))
 
