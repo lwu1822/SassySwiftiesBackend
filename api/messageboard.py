@@ -102,11 +102,11 @@ class FdPostAPI(Resource):
                 return {'message': f'post not found'}, 404
             
             body = request.get_json()
-            imageURL = body.get('imageURL')
-            if imageURL is None:
-                return {'message': f'no like change (imageURL) request found'}, 404
+            likes = body.get('likes')
+            if likes is None:
+                return {'message': f'no like change request found'}, 404
 
-            post.update(imageURL)
+            post.update(likes)
             return {'message': f'Updated'}, 200
         
     # Building REST api endpoints

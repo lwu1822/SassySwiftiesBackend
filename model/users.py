@@ -184,7 +184,7 @@ class User(db.Model):
 """Database Creation and Testing """
 
 class Post(db.Model):
-    __tablename__ = 'posts9'
+    __tablename__ = 'posts10'
 
     # Define the Notes schema
     id = db.Column(db.Integer, primary_key=True)
@@ -292,6 +292,18 @@ class Post(db.Model):
             "username": self._username,
             "likes": self._likes
         }
+    def update(self, likes = 0):
+        """Only updates values with length"""
+        self.likes = self.likes + likes
+        db.session.commit()
+        return self
+
+    # CRUD delete: remove self
+    # None
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        return None
     
 # Builds working data for testing
 def initUsers():
