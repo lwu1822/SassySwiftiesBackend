@@ -21,7 +21,7 @@ class User(db.Model):
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
-    _username = db.Column(db.String(255), unique=False, nullable=False)
+    _username = db.Column(db.String(255), unique=True, nullable=False)
     _password = db.Column(db.String(255), unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
@@ -193,6 +193,8 @@ def initUsers():
         u9 = User(username='a', password='a')
 
         users = [u1, u2, u3, u4, u5, u6, u7, u8, u9]
+
+
 
         """Builds sample user/note(s) data"""
         for user in users:
