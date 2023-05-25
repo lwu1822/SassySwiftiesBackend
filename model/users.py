@@ -30,7 +30,7 @@ class User(db.Model):
     # constructor of a User object, initializes the instance variables within object (self)
     def __init__(self, username, password):
         self._username = username    # variables with self prefix become part of the object, 
-        self._password = password
+        self._password = generate_password_hash(password, method='sha256')
 
     # a name getter method, extracts name from object
     @property
@@ -49,6 +49,10 @@ class User(db.Model):
     @password.setter
     def password(self, password):
         self._password = generate_password_hash(password, method='sha256')
+
+    
+    def passwordCheck(self):
+        return self._password
 
     # check password parameter versus stored/encrypted password
     #def is_password(self, password):
@@ -186,8 +190,9 @@ def initUsers():
         u6 = User(username='yeung', password='twsifty')
         u7 = User(username='mmort', password='codecodecode')
         u8 = User(username='sssachit', password='greenring')
+        u9 = User(username='a', password='a')
 
-        users = [u1, u2, u3, u4, u5, u6, u7, u8]
+        users = [u1, u2, u3, u4, u5, u6, u7, u8, u9]
 
         """Builds sample user/note(s) data"""
         for user in users:
