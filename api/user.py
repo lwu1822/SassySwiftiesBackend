@@ -60,7 +60,6 @@ class UserAPI:
                 return {'message': f'Username is missing, or is less than 2 characters'}, 400
             # validate username
             dupuser = User.query.filter_by(_username=username).first()
-            print("output: " + str(dupuser))
             if dupuser != None and dupuser.username == username:
                 print("duplicate")
                 return {'message': f'Duplicate Username Detected'}, 400
@@ -153,10 +152,17 @@ class UserAPI:
             username = body.get('username')
             password = body.get('password')
             
-            user = User.query.filter_by(_username=username).first()
-            if user is None or not user.is_password(password):
-                return {'message': f"Invalid user id or password"}, 400
             
+            dbUser = User.query.filter_by(_username=username).first()
+            dbUsername = dbUser.username
+
+            if dbUsername == "a":
+                print("hi")
+                print("password: " + str(dbUser.passwordCheck()))
+            
+            if dbUser is None or dbUser.password != password:
+                return {'message': f"Invalid user id or password"}, 400
+
             access_token = create_access_token(identity=str(username))
 
             return jsonify( {
