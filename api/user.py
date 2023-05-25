@@ -153,6 +153,10 @@ class UserAPI:
             username = body.get('username')
             password = body.get('password')
             
+            user = User.query.filter_by(_username=username).first()
+            if user is None or not user.is_password(password):
+                return {'message': f"Invalid user id or password"}, 400
+            
             access_token = create_access_token(identity=str(username))
 
             return jsonify( {
