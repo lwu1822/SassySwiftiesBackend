@@ -156,7 +156,7 @@ class UserAPI:
             dbUser = User.query.filter_by(_username=username).first()
             dbUsername = dbUser.username
 
-            if dbUsername == "a":
+            if dbUsername == username:
                 print("hi")
                 print("password: " + str(dbUser.passwordCheck()))
             
