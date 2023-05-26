@@ -33,6 +33,9 @@ class User(db.Model):
     #_matchingMaxTokens = db.Column(db.Integer, unique = False)
     
     # constructor of a User object, initializes the instance variables within object (self)
+    
+    #def __init__(self, username, password, currentTokens = 0, allTimeTokens = 0, matchingMaxTokens = 0):
+    
     def __init__(self, username, password):
         self._username = username    # variables with self prefix become part of the object, 
         self._password = generate_password_hash(password, method='sha256')
