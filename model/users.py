@@ -54,10 +54,38 @@ class User(db.Model):
     @password.setter
     def password(self, password):
         self._password = generate_password_hash(password, method='sha256')
-
     
     def passwordCheck(self):
         return self._password
+
+    # Make getters and setters for the Swifties
+    
+    #@property
+    #def currentTokens(self):
+        #return self._currentTokens
+    
+    #@currentTokens.setter
+    #def currentTokens(self, currentTokens):
+        #self._currentTokens = currentTokens
+    
+    
+    #@property
+    #def allTimeTokens(self):
+        #return self._allTimeTokens
+    
+    #@allTimeTokens.setter
+    #def allTimeTokens(self, allTimeTokens):
+        #self._allTimeTokens = allTimeTokens
+        
+        
+    #@property
+    #def matchingMaxTokens(self):
+        #return self._matchingMaxTokens
+    
+    #@matchingMaxTokens.setter
+    #def matchingMaxTokens(self, matchingMaxTokens):
+        #self._matchingMaxTokens = matchingMaxTokens
+
 
     # check password parameter versus stored/encrypted password
     #def is_password(self, password):
