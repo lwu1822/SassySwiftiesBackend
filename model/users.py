@@ -36,6 +36,10 @@ class User(db.Model):
     def __init__(self, username, password):
         self._username = username    # variables with self prefix become part of the object, 
         self._password = generate_password_hash(password, method='sha256')
+        # Make initial values of Swifties
+        #self._currentTokens = 0
+        #self._allTimeTokens = 0
+        #self._matchingMaxTokens = 0
 
     # a name getter method, extracts name from object
     @property
@@ -134,6 +138,8 @@ class User(db.Model):
             "username": self.username,
             "password": self.password,
             "posts": [post.read() for post in self.posts]
+            #Do Swifties
+            #"current_swifties": self.
         }
 
     # CRUD update: updates user name, password, phone
