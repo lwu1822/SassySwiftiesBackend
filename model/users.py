@@ -27,6 +27,11 @@ class User(db.Model):
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
+    # Do Swifties virtual currencies
+    #_currentTokens = db.Column(db.Integer, unique = False)
+    #_allTimeTokens = db.Column(db.Integer, unique = False)
+    #_matchingMaxTokens = db.Column(db.Integer, unique = False)
+    
     # constructor of a User object, initializes the instance variables within object (self)
     def __init__(self, username, password):
         self._username = username    # variables with self prefix become part of the object, 
