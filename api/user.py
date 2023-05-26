@@ -196,7 +196,10 @@ class UserAPI:
 
     #class _updateTokens(Resource)
         #def post(self):
-          
+          #body = request.get_json()
+          #token = body.get('money')
+          #I want to go through the CRUD update function on model. I don't
+          #want a blind override here.
 
 
 
