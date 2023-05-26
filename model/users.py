@@ -40,9 +40,9 @@ class User(db.Model):
         self._username = username    # variables with self prefix become part of the object, 
         self._password = generate_password_hash(password, method='sha256')
         # Make initial values of Swifties
-        #self._currentTokens = 0
-        #self._allTimeTokens = 0
-        #self._matchingMaxTokens = 0
+        #self._currentTokens = currentTokens
+        #self._allTimeTokens = allTimeTokens
+        #self._matchingMaxTokens = matchingMaxTokens
 
     # a name getter method, extracts name from object
     @property
@@ -142,11 +142,15 @@ class User(db.Model):
             "password": self.password,
             "posts": [post.read() for post in self.posts]
             #Do Swifties
-            #"current_swifties": self.
+            #"current_swifties": self.currentTokens
+            #"all_time_swifties": self.allTimeTokens
+            #"matching_max_swifties": self.matchingMaxTokens
         }
 
     # CRUD update: updates user name, password, phone
     # returns self
+    
+    
     def update(self, username="", password=""):
         """only updates values with length"""
         if len(username) > 0:
@@ -155,6 +159,19 @@ class User(db.Model):
             self.password = password
         db.session.commit()
         return self
+    
+    # I hope I'm not messing this up. Here's a second update function for the matching game Swifties.
+    
+    #def update(self, Tokens="")
+        # Update nonzero values
+        #if Tokens > 0:
+            #self.currentTokens = Tokens + self.currentTokens
+        #if Tokens > 0:
+            #self.allTimeTokens = Tokens + self.allTimeTokens
+        #if Tokens > self.matchingMaxTokens:
+            #self.matchingMaxTokens = Tokens
+        #db.session.commit()
+        #return self
 
     # CRUD delete: remove self
     # None
