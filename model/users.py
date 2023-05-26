@@ -34,7 +34,7 @@ class User(db.Model):
     
     # constructor of a User object, initializes the instance variables within object (self)
     
-    #def __init__(self, username, password, currentTokens = 0, allTimeTokens = 0, matchingMaxTokens = 0):
+    #def __init__(self, username, password, currentTokens=0, allTimeTokens=0, matchingMaxTokens=0):
     
     def __init__(self, username, password):
         self._username = username    # variables with self prefix become part of the object, 
