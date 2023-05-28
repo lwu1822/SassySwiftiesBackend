@@ -92,6 +92,31 @@ class UserAPI:
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
+
+    class _Update(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+        def post(self): # Create method
+            ''' Read data for json body '''
+            body = request.get_json()
+            
+            ''' Avoid garbage in, error checking '''
+            # validate name
+            username = body.get('username')
+            if username is None or len(username) < 2:
+                return {'message': f'Username is missing, or is less than 2 characters'}, 400
+          
+            user = User.query.filter_by(_username=username).first()
+            # look for password and dob
+            password = body.get('password')
+
+            user = user.update(username, password)
+
+            
+            # success returns json of user
+            if user:
+                return jsonify(user.read())
+            # failure returns error
+            return {'message': f'Processed {username}, either a format error or username: {username} is duplicate'}, 400
+
     class _Delete(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
         def get(self, username): # Read Method
             user = User.query.filter_by(_username=username).first()
@@ -222,6 +247,7 @@ class UserAPI:
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')
     api.add_resource(_Output, '/output')
+    api.add_resource(_Update, '/update')
     api.add_resource(_Delete, '/delete/<username>')
     #api.add_resource(_updateTokens, '/updateTokens')
     
