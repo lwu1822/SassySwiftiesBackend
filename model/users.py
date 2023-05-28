@@ -28,21 +28,19 @@ class User(db.Model):
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
     # Do Swifties virtual currencies
-    #_currentTokens = db.Column(db.Integer, unique = False)
-    #_allTimeTokens = db.Column(db.Integer, unique = False)
-    #_matchingMaxTokens = db.Column(db.Integer, unique = False)
+    _currentTokens = db.Column(db.Integer, unique=False)
+    _allTimeTokens = db.Column(db.Integer, unique=False)
+    _matchingMaxTokens = db.Column(db.Integer, unique=False)
     
     # constructor of a User object, initializes the instance variables within object (self)
     
-    #def __init__(self, username, password, currentTokens=0, allTimeTokens=0, matchingMaxTokens=0):
-    
-    def __init__(self, username, password):
+    def __init__(self, username, password, currentTokens=0, allTimeTokens=0, matchingMaxTokens=0):
         self._username = username    # variables with self prefix become part of the object, 
         self._password = generate_password_hash(password, method='sha256')
         # Make initial values of Swifties
-        #self._currentTokens = currentTokens
-        #self._allTimeTokens = allTimeTokens
-        #self._matchingMaxTokens = matchingMaxTokens
+        self._currentTokens = currentTokens
+        self._allTimeTokens = allTimeTokens
+        self._matchingMaxTokens = matchingMaxTokens
 
     # a name getter method, extracts name from object
     @property
@@ -67,31 +65,31 @@ class User(db.Model):
 
     # Make getters and setters for the Swifties
     
-    #@property
-    #def currentTokens(self):
-        #return self._currentTokens
+    @property
+    def currentTokens(self):
+        return self._currentTokens
     
-    #@currentTokens.setter
-    #def currentTokens(self, currentTokens):
-        #self._currentTokens = currentTokens
+    @currentTokens.setter
+    def currentTokens(self, currentTokens):
+        self._currentTokens = currentTokens
     
     
-    #@property
-    #def allTimeTokens(self):
-        #return self._allTimeTokens
+    @property
+    def allTimeTokens(self):
+        return self._allTimeTokens
     
-    #@allTimeTokens.setter
-    #def allTimeTokens(self, allTimeTokens):
-        #self._allTimeTokens = allTimeTokens
+    @allTimeTokens.setter
+    def allTimeTokens(self, allTimeTokens):
+        self._allTimeTokens = allTimeTokens
         
         
-    #@property
-    #def matchingMaxTokens(self):
-        #return self._matchingMaxTokens
+    @property
+    def matchingMaxTokens(self):
+        return self._matchingMaxTokens
     
-    #@matchingMaxTokens.setter
-    #def matchingMaxTokens(self, matchingMaxTokens):
-        #self._matchingMaxTokens = matchingMaxTokens
+    @matchingMaxTokens.setter
+    def matchingMaxTokens(self, matchingMaxTokens):
+        self._matchingMaxTokens = matchingMaxTokens
 
 
     # check password parameter versus stored/encrypted password
@@ -142,9 +140,9 @@ class User(db.Model):
             "password": self.password,
             "posts": [post.read() for post in self.posts]
             #Do Swifties
-            #"current_swifties": self.currentTokens
-            #"all_time_swifties": self.allTimeTokens
-            #"matching_max_swifties": self.matchingMaxTokens
+            "current_swifties": self.currentTokens
+            "all_time_swifties": self.allTimeTokens
+            "matching_max_swifties": self.matchingMaxTokens
         }
 
     # CRUD update: updates user name, password, phone
@@ -162,16 +160,21 @@ class User(db.Model):
     
     # I hope I'm not messing this up. Here's a second update function for the matching game Swifties.
     
-    #def update(self, Tokens="")
+    def update(self, Tokens="", Purchase=0)
         # Update nonzero values
-        #if Tokens > 0:
-            #self.currentTokens = Tokens + self.currentTokens
-        #if Tokens > 0:
-            #self.allTimeTokens = Tokens + self.allTimeTokens
-        #if Tokens > self.matchingMaxTokens:
-            #self.matchingMaxTokens = Tokens
-        #db.session.commit()
-        #return self
+        if Tokens > 0:
+            self.currentTokens = Tokens + self.currentTokens
+        if Tokens > 0:
+            self.allTimeTokens = Tokens + self.allTimeTokens
+        if Tokens > self.matchingMaxTokens:
+            self.matchingMaxTokens = Tokens
+        if Purchase > 0;
+            self.currentTokens = self.currentTokens - Purchase
+        db.session.commit()
+        return self
+    
+    
+    
 
     # CRUD delete: remove self
     # None
