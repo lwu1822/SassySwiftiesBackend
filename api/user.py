@@ -229,7 +229,6 @@ class UserAPI:
     class _UpdateTokens(Resource):
         def post(self):
             body = request.get_json()
-            console.log(body);
             token = body.get('money')
 
             username = body.get('username')
