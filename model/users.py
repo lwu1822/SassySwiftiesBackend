@@ -138,10 +138,10 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "password": self.password,
-            "posts": [post.read() for post in self.posts]
+            "posts": [post.read() for post in self.posts],
             #Do Swifties
-            "current_swifties": self.currentTokens
-            "all_time_swifties": self.allTimeTokens
+            "current_swifties": self.currentTokens,
+            "all_time_swifties": self.allTimeTokens,
             "matching_max_swifties": self.matchingMaxTokens
         }
 
@@ -160,7 +160,7 @@ class User(db.Model):
     
     # I hope I'm not messing this up. Here's a second update function for the matching game Swifties.
     
-    def update(self, Tokens="", Purchase=0)
+    def update(self, Tokens="", Purchase=0):
         # Update nonzero values
         if Tokens > 0:
             self.currentTokens = Tokens + self.currentTokens
@@ -168,7 +168,7 @@ class User(db.Model):
             self.allTimeTokens = Tokens + self.allTimeTokens
         if Tokens > self.matchingMaxTokens:
             self.matchingMaxTokens = Tokens
-        if Purchase > 0;
+        if Purchase > 0:
             self.currentTokens = self.currentTokens - Purchase
         db.session.commit()
         return self
