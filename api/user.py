@@ -92,6 +92,13 @@ class UserAPI:
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
     
+    class _Delete(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
+        def get(self, username): # Read Method
+            user = User.query.filter_by(_username=username).first()
+            user.delete()
+            return jsonify({"message": "User successfully deleted"})  # jsonify creates Flask response object, more specific to APIs than json.dumps
+    
+    
     class _Security(Resource):
 
         def post(self):
@@ -215,5 +222,6 @@ class UserAPI:
     api.add_resource(_Login, '/login')
     api.add_resource(_Info, '/info')
     api.add_resource(_Output, '/output')
+    api.add_resource(_Delete, '/delete/<username>')
     #api.add_resource(_updateTokens, '/updateTokens')
     
