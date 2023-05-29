@@ -17,12 +17,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # -- b.) User represents data we want to store, something that is built on db.Model
 # -- c.) SQLAlchemy ORM is layer on top of SQLAlchemy Core, then SQLAlchemy engine, SQL
 class User(db.Model):
-    __tablename__ = 'users'  # table name is plural, class name is singular
+    __tablename__ = 'users2'  # table name is plural, class name is singular
 
     # Define the User schema with "vars" from object
     id = db.Column(db.Integer, primary_key=True)
     _username = db.Column(db.String(255), unique=True, nullable=False)
     _password = db.Column(db.String(255), unique=False, nullable=False)
+    _nfts = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False)
+    _profile = db.Column(db.Integer, unique=False, nullable=False)
 
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
@@ -37,6 +39,8 @@ class User(db.Model):
     def __init__(self, username, password, currentTokens=0, allTimeTokens=0, matchingMaxTokens=0):
         self._username = username    # variables with self prefix become part of the object, 
         self._password = generate_password_hash(password, method='sha256')
+        self._nfts = []
+        self._profile = 0
         # Make initial values of Swifties
         self._currentTokens = currentTokens
         self._allTimeTokens = allTimeTokens
@@ -62,6 +66,27 @@ class User(db.Model):
     
     def passwordCheck(self):
         return self._password
+    
+
+    # Nfts
+    @property
+    def nfts(self):
+        return self._nfts 
+
+    @nfts.setter
+    def nfts(self, nfts):
+        self._nfts = nfts
+
+    @property
+    def profile(self):
+        return self._profile 
+
+    @profile.setter
+    def profile(self, profile):
+        self._profile = profile
+
+    
+    
 
     # Make getters and setters for the Swifties
     
@@ -138,6 +163,8 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "password": self.password,
+            "nfts": self.nfts,
+            "profile": self.profile,
             "posts": [post.read() for post in self.posts],
             #Do Swifties
             "current_swifties": self.currentTokens,
