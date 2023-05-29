@@ -58,8 +58,8 @@ class UserAPI:
             ''' Avoid garbage in, error checking '''
             # validate name
             username = body.get('username')
-            if username is None or len(username) < 2:
-                return {'message': f'Username is missing, or is less than 2 characters'}, 400
+            if username is None or len(username) < 1:
+                return {'message': f'Username is missing, or is less than 1 characters'}, 400
             # validate username
             dupuser = User.query.filter_by(_username=username).first()
             if dupuser != None and dupuser.username == username:
