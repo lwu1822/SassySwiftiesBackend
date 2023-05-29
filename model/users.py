@@ -160,7 +160,7 @@ class User(db.Model):
     
     # I hope I'm not messing this up. Here's a second update function for the matching game Swifties.
     
-    def update(self, Username="", Tokens="", Purchase=0):
+    def updateToken(self, Username="", Tokens="", Purchase=0):
         # Update nonzero values
         if Tokens > 0:
             self.currentTokens = Tokens + self.currentTokens
