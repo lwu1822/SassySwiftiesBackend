@@ -244,6 +244,13 @@ class UserAPI:
             username = body.get('username')
 
             user = User.query.filter_by(_username=username).first()
+            
+            uo=User(username=username, Tokens=token)
+            
+            token_data = uo.updateToken()
+            
+            if token_data:
+              return token_data
 
             return {'message': 'placeholder'}
 
