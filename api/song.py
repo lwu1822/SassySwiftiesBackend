@@ -62,7 +62,7 @@ class SongsAPI:
     
 if __name__ == "__main__": 
     # server = "http://127.0.0.1:5000" # run local
-    server = 'https://lwu1822.github.io/SassySwiftiesFrontend/' # run from web
+    server = 'https://lwu1822.github.io/SassySwiftiesFrontend' # run from web
     url = server + "/api/songs"
     responses = []  # responses list
 
