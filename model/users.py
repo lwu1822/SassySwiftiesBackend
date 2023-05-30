@@ -335,6 +335,86 @@ class Post(db.Model):
         db.session.commit()
         return None
     
+class Nfts(db.Model):
+    __tablename__ = 'nfts3'
+    id = db.Column(db.Integer, primary_key=True)
+    _userID = db.Column(db.Integer, unique=True)
+    _profile = db.Column(db.Integer, unique=False)
+    _nft0 = db.Column(db.Boolean, unique=False)
+    _nft1 = db.Column(db.Boolean, unique=False)
+    _nft2 = db.Column(db.Boolean, unique=False)
+    _nft3 = db.Column(db.Boolean, unique=False)
+    _nft4 = db.Column(db.Boolean, unique=False)
+    _nft5 = db.Column(db.Boolean, unique=False)
+
+    def __init__(self, userID, nfts, profile):
+        self._userID = userID
+        self._nft0 = nfts[0]
+        self._nft1 = nfts[1]
+        self._nft2 = nfts[2]
+        self._nft3 = nfts[3]
+        self._nft4 = nfts[4]
+        self._nft5 = nfts[5]
+        self._profile = profile
+
+    @property
+    def userID(self):
+        return self._userID
+
+    @userID.setter
+    def userID(self, value):
+        self._userID = value
+
+    @property
+    def nfts(self):
+        return [self._nft0, self._nft1, self._nft2, self._nft3, self._nft4, self._nft5]
+
+    @nfts.setter
+    def nfts(self, value):
+        self._nft0 = value[0]
+        self._nft1 = value[1]
+        self._nft2 = value[2]
+        self._nft3 = value[3]
+        self._nft4 = value[4]
+        self._nft5 = value[5]
+
+    @property
+    def profile(self):
+        return self._profile
+
+    @profile.setter
+    def profile(self, value):
+        self._profile = value
+
+    def __repr__(self):
+        return "Nfts(" + str(self.id) + "," + str(self.userID) + "," + str(self.nfts) + "," + str(self.profile) + ")"
+
+    def create(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+
+    def read(self):
+        return {
+            "id": self.id,
+            "userID": self.userID,
+            "nfts": self.nfts,
+            "profile": self.profile
+        }
+
+    def update(self, nfts=None, profile=None):
+        if nfts is not None:
+            self.nfts = nfts
+        if profile is not None:
+            self.profile = profile
+        db.session.commit()
+        return self
+
+
 # Builds working data for testing
 def initUsers():
     with app.app_context():
