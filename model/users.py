@@ -214,7 +214,7 @@ class User(db.Model):
 """Database Creation and Testing """
 
 class Post(db.Model):
-    __tablename__ = 'posts10'
+    __tablename__ = 'posts11'
 
     # Define the Notes schema
     id = db.Column(db.Integer, primary_key=True)
@@ -224,6 +224,7 @@ class Post(db.Model):
     _date = db.Column(db.String, unique=False)
     _username = db.Column(db.String, unique=False)
     _likes = db.Column(db.Integer, unique=False)
+    _likedby = db.Column(db.String, unique=False)
 
     # Define a relationship in Notes Schema to userID who originates the note, many-to-one (many notes to one user)
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -236,6 +237,7 @@ class Post(db.Model):
         self._date = date
         self._username = username
         self._likes = 0
+        self._likedby = ""
 
     @property
     def title(self):
@@ -285,6 +287,13 @@ class Post(db.Model):
     def likes(self, value):
         self._likes = value
 
+    @property
+    def likedby(self):
+        return self._likedby
+
+    @likedby.setter
+    def likedby(self, value):
+        self._likedby = value
 
     # Returns a string representation of the Notes object, similar to java toString()
     # returns string
@@ -320,11 +329,22 @@ class Post(db.Model):
             "image": self._image,
             "date": self._date,
             "username": self._username,
-            "likes": self._likes
+            "likes": self._likes,
+            "likedby": self._likedby
         }
-    def update(self, likes = 0):
+    def update(self, likes = 0, add_like = "", remove_like = ""):
         """Only updates values with length"""
         self.likes = self.likes + likes
+
+        if(len(add_like) > 0 or len(remove_like) > 0):
+            likedby_list = string_to_list(self.likedby)
+            if(len(add_like) > 0):
+                likedby_list.append(add_like)
+            if(len(remove_like) > 0):
+                likedby_list.remove(remove_like)
+
+            self.likedby = list_to_string(likedby_list)
+
         db.session.commit()
         return self
 
@@ -413,6 +433,13 @@ class Nfts(db.Model):
             self.profile = profile
         db.session.commit()
         return self
+
+def string_to_list(string):
+    return [x for x in string.split(', ')]
+
+def list_to_string(lst):
+    return ', '.join(map(str, lst))
+
 
 
 # Builds working data for testing

@@ -55,7 +55,7 @@ class FdPostAPI(Resource):
                 note=text,
                 date=datetime.now().strftime('%Y/%m/%d'),
                 username=username,
-                image=image,
+                image=image
             )
             
             ''' Create post in database '''
@@ -103,10 +103,19 @@ class FdPostAPI(Resource):
             
             body = request.get_json()
             likes = body.get('likes')
-            if likes is None:
-                return {'message': f'no like change request found'}, 404
+            add = body.get('add')
+            remove = body.get('remove')
 
-            post.update(likes)
+            if likes is None and add is None and remove is None:
+                return {'message': f'no like change request found'}, 404
+            
+            if likes is not None:
+                post.update(likes = likes)
+            if add is not None: 
+                 post.update(add_like = add)
+            if remove is not None: 
+                 post.update(remove_like = remove)
+
             return {'message': f'Updated'}, 200
         
     # Building REST api endpoints
