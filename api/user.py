@@ -246,7 +246,7 @@ class UserAPI:
             user = User.query.filter_by(_username=username).first()
             
             uo=User(username=username, Tokens=token)
-            token_data = uo.updateToken()
+            token_data = User.updateTokens(username, token)
             
             if token_data:
               return token_data
