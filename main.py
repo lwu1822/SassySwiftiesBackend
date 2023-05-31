@@ -15,6 +15,7 @@ from api.covid import covid_api # Blueprint import api definition
 from api.song import songs_api # Blueprint import api definition
 from api.user import user_api # Blueprint import api definition
 from api.player import player_api
+from api.nfts import nfts_api
 from api.messageboard import messageboard_api
 
 # setup App pages
@@ -47,6 +48,7 @@ app.register_blueprint(covid_api) # register api routes
 app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(messageboard_api)
+app.register_blueprint(nfts_api)
 app.register_blueprint(app_projects) # register app pages
 
 

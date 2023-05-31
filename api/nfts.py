@@ -71,7 +71,8 @@ class NftAPI(Resource):
             if user is None:
                 return {'message': f'user not found'}, 404
             
-            nft = Nfts.query.filter_by(userID=id).first()
+            nft = Nfts.query.filter_by(id=id).first()
+            print(nft)
             if nft is None:
                 return {'message': f'nft not found'}, 404
 
@@ -82,12 +83,13 @@ class NftAPI(Resource):
             user_money = user.currentTokens
             index = 1
 
-            while index < 5:
+            while index <= 5:
                 if user_money >= nft_money_requirements[index]:
                     nfts.append(True)
                 else:
                     nfts.append(False)
-
+                index = index + 1
+            print(nfts)
             nft.update(nfts)
             return {'message': f'Updated'}, 200
 
