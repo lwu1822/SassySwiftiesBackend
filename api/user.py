@@ -264,8 +264,15 @@ class UserAPI:
         
     class _Userinfo(Resource):  # User API operation for Create, Read.  THe Update, Delete methods need to be implemeented
         def get(self, username): # Read Method
-
+            body = request.get_json()
+            username = body.get('username')
+            if username is None:
+                return {'message': f'Username is missing'}, 400
+            
             user = User.query.filter_by(_username=username).first()
+            if user is None:
+                return {'message': f'User is missing'}, 400
+            
             userId = user.id
             return jsonify({"id": userId})  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
@@ -281,4 +288,4 @@ class UserAPI:
     api.add_resource(_Update, '/update')
     api.add_resource(_Delete, '/delete/<username>')
     api.add_resource(_UpdateTokens, '/updateTokens')
-    api.add_resource(_Userinfo, '/userinfo/<username>') 
+    api.add_resource(_Userinfo, '/userinfo') 
