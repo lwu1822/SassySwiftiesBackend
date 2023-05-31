@@ -222,6 +222,7 @@ class UserAPI:
             return jsonify( 
                 decoded 
             )
+          print(decoded)
             
             
     class _Output(Resource):
@@ -245,9 +246,9 @@ class UserAPI:
 
             user = User.query.filter_by(_username=username).first()
             
-            uo=User(username=username, Tokens=token)
-            
-            token_data = uo.updateToken()
+            tobj=User(username=username, Tokens=token)
+            print(tobj)
+            token_data = tobj.updateToken()
             
             if token_data:
               return token_data
