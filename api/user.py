@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 from datetime import datetime as dt
 
-from model.users import User
+from model.users import *
 
 """ 
 JWT test
@@ -245,7 +245,7 @@ class UserAPI:
 
             user = User.query.filter_by(_username=username).first()
             
-            updateToken(self, user, token)
+            updateToken(self, user.username, token)
             
             if token_data:
               return token_data
