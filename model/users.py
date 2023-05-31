@@ -444,7 +444,7 @@ def initUsers():
                     # user.posts.append(Post(id=user.id, note=note, image='ncs_logo.png', title="Temp title", date="1/2/3", username="Temp name"))
                 '''add user/post data to table'''
                 user.create()
-                Nfts(userID = user.id, profile = 0, nft0 = True, nft1 = False, nft2 = False, nft3 = False, nft4 = False, nft5 = False, ).create()
+                #Nfts(userID = user.id, profile = 0, nft0 = True, nft1 = False, nft2 = False, nft3 = False, nft4 = False, nft5 = False, ).create()
             except IntegrityError:
                 '''fails with bad or duplicate data'''
                 db.session.remove()
