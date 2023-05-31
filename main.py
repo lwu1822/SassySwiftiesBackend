@@ -13,7 +13,7 @@ from model.players import initPlayers
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
 from api.song import songs_api # Blueprint import api definition
-# from api.user import user_api # Blueprint import api definition
+from api.user import user_api # Blueprint import api definition
 from api.player import player_api
 from api.nfts import nfts_api
 from api.messageboard import messageboard_api
@@ -30,7 +30,7 @@ from flask import jsonify, request, make_response, redirect, session
 #import jwt 
 import datetime 
 from functools import wraps
-# from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, decode_token)
 from flask_session import Session 
 import os
 #from __init__ import ApplicationConfig
@@ -45,7 +45,7 @@ db.init_app(app)
 # register URIs
 app.register_blueprint(songs_api) # register api routes
 app.register_blueprint(covid_api) # register api routes
-# app.register_blueprint(user_api) # register api routes
+app.register_blueprint(user_api) # register api routes
 app.register_blueprint(player_api)
 app.register_blueprint(messageboard_api)
 app.register_blueprint(nfts_api)
@@ -65,7 +65,7 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['JWT_CSRF_CHECK_FORM'] = True
 
-# jwt = JWTManager(app)
+jwt = JWTManager(app)
 
 
 """
