@@ -239,7 +239,7 @@ class UserAPI:
     class _UpdateTokens(Resource):
         def put(self):
             body = request.get_json()
-            token = body.get('money')
+            token = body.get('token')
 
             username = body.get('username')
 
