@@ -1,0 +1,285 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Swifties Unite! Admin Screen</title>
+    <style>
+      
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+      .button {
+      background-color: #ffffff;
+      font-size: 24px;
+        
+      }
+      body{
+        text-align: center;
+      }
+      input[type=text], select {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+body {
+  font-family: "San Francisco", system-ui, -apple-system, "Helvetica Neue", Helvetica, sans-serif;
+  background: #9b85ff;
+  color: #fefefe;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+input[type=answer], select {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 50%;
+    background-color: #ffffff;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #decbff;
+}
+
+h1 {
+  font-family: 'Lobster', cursive;
+  font-weight: normal;
+  font-size: 3rem;
+  margin-top: 0;
+  text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <h1>Swifties Unite! Admin Screen</h1>
+
+    <div id="gameSelection">
+        <h2>Pick a question type</h2> <br/>
+        <button id="shortAnswer" class="button">~ Short Answer (Latest)~</button>
+        <button id="mcq" class="button">~ Multiple Choice (Original)~</button>
+        <button id="trueFalse" class="button">~ True False (Original)~</button><br /><br />
+    </div>
+
+    <div id="short">
+        <h2>Short Answer Question</h2><br />
+        <form id="shortQuestion" action="">
+            <label for="question" style="font-size:30px;">Question:</label> <input type="text" id="question"> <br />
+            <label for="answer" style="font-size:30px;">Answer:</label> <input type="answer" id="answer"> <br />
+            <label for="timeLimit" style="font-size:30px;">Time Limit:</label> <input type="range" step="5" min="10" max="90" id="timeLimit"> <br />
+           
+            <input id="submit" type="submit">
+          </form>
+    </div>
+
+    <div id="multichoice">
+      <h2>Multiple Choice Question</h2><br />
+      <form id="multiQuestion" action="">
+          <label for="questionmc" style="font-size:30px;">Question:</label> <input type="text" id="questionmc"> <br />
+          <label for="options" style="font-size:30px;">Answer:</label>
+          <input type="radio" id="option1" name="option" value="option1">
+          <label for="option1" style="font-size:30px;">Option 1</label>
+          <input type="radio" id="option2" name="option" value="option2">
+          <label for="option2" style="font-size:30px;">Option 2</label>
+          <input type="radio" id="option3" name="option" value="option3">
+          <label for="option3" style="font-size:30px;">Option 3</label>
+          <input type="radio" id="option4" name="option" value="option4">
+          <label for="option4" style="font-size:30px;">Option 4</label>
+          <br />
+          <label for="timeLimit" style="font-size:30px;">Time Limit:</label> <input type="range" step="5" min="10" max="90" id="timeLimit"> <br />
+
+          <input id="submit" type="submit">
+        </form>
+  </div>
+
+    <div id ="truefalse">
+      <h2>True Or False Question</h2><br />
+        <form id="trueFalseQuestion" action="">
+            <label for="tfquestion" style="font-size:30px;">Question:</label> <input type="text" id="tfquestion"> <br />
+            <label for="trueorfalse" style="font-size:30px;">Answer:</label> <input type="radio" id="trueorfalse"
+            name="true" value="true"><label for="true" style="font-size:30px;">True</label> <input type="radio" id="trueorfalse"
+            name="false" value="false"><label for="false" style="font-size:30px;">False</label> <br />
+            <label for="tftimeLimit">Time Limit:</label> <input type="range" step="5" min="10" max="90" id="tftimeLimit"> <br />
+          
+        
+            <input id="tfsubmit"type="submit">
+        </form>
+    </div>
+
+    <div id="gameSummary">
+        <p id="totalAnswers"></p>
+        <p id="correctAnswers"></p>
+        <p id="incorrectAnswers"></p>
+        <p id="correctUsers"></p>
+        <p id="correctAverage"></p>
+        <p id="incorrectUsers"></p>
+        <button id="reset">Submit Another Question</button>
+    </div>
+
+    <p id="timer"></p>
+
+    
+    
+
+  
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+
+    // Make the connection...
+    var socket = io();
+
+
+
+  
+    $("#short").hide();
+    $("#multichoice").hide();
+    $("#truefalse").hide();
+    $("#gameSummary").hide();
+      $("#shortAnswer").click(function(){
+          $("#short").show()
+          $("#truefalse").hide();
+          $("#multichoice").hide();
+      });
+      $("#mcq").click(function(){
+          $("#mcq").show()
+          $("#truefalse").hide();
+          $("#short").hide();
+      });
+      $("#trueFalse").click(function(){
+          $("#truefalse").show();
+          $("#short").hide()
+          $("#multichoice").hide();
+      });
+    
+
+
+      $("#reset").click(function(){
+        $("#gameSelection").show();
+        $("#gameSummary").hide();
+      });
+
+    // If user clicks submit, emit the submitquestion message...
+    $('#shortQuestion').submit(function(){
+      $("#gameSelection").hide();
+      $("#short").hide();
+      $("#gameSummary").show();
+      socket.emit('submitquestion', 
+                  {question: $("#question").val(),
+                   answer: $("#answer").val(),
+                   timeLimit: $("#timeLimit").val(),
+                   questionType: "short"
+                  });
+        $("#reset").prop('disabled',true);
+        let counter = $("#timeLimit").val();
+			  let c = $("#timeLimit").val();
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			      
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#reset").prop('disabled',false);
+			    }
+		  }, 1000);
+
+      
+      return false;
+    });
+
+    $('#trueFalseQuestion').submit(function(){
+      $("#gameSelection").hide();
+      $("#truefalse").hide();
+      $("#gameSummary").show();
+      socket.emit('submitquestion', 
+                  {question: $("#tfquestion").val(),
+                   answer: $("#trueorfalse:checked").val(),
+                   timeLimit: $("#tftimeLimit").val(),
+                   questionType: "truefalse"
+                  });
+        $("#reset").prop('disabled',true);
+        let counter = $("#tftimeLimit").val();
+			  let c = $("#tftimeLimit").val();
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			      
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#reset").prop('disabled',false);
+			    }
+		  }, 1000);
+      return false;
+    });
+
+    $('#multiQuestion').submit(function(){
+      $("#gameSelection").hide();
+      $("#multichoice").hide();
+      $("#gameSummary").show();
+      socket.emit('submitquestion', 
+                  {question: $("#question").val(),
+                   answer: $("#answer").val(),
+                   timeLimit: $("#timeLimit").val(),
+                   questionType: "short"
+                  });
+        $("#reset").prop('disabled',true);
+        let counter = $("#timeLimit").val();
+			  let c = $("#timeLimit").val();
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			      
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#reset").prop('disabled',false);
+			    }
+		  }, 1000);
+
+      
+      return false;
+    });
+
+    socket.on('deliverData', function(data) {
+      console.log(data);
+
+
+      let total = $("#totalAnswers").val() + data.totalAnswers;
+      let correctAns = $("#correctAnswers").val() + data.correctAnswers;
+      let incorrectAns = $("#incorrectAnswers").val() + data.incorrectAnswers;
+      let correctUsr = $("#correctUsers").val() + data.correctUsers;
+      let incorrectUsr = $("#incorrectUsers").val() + data.incorrectUsers;
+      let perc = $("#correctAverage").val() + data.percentage;
+
+      $("#totalAnswers").html("Total Answers:" + " " +  total);
+      $("#correctAnswers").html("Correct Answers:" + " " + correctAns);
+      $("#incorrectAnswers").html("Incorrect Answers:" + " " + incorrectAns);
+      $("#correctUsers").html("Correct Users:" + " " + correctUsr);
+      $("#incorrectUsers").html("Incorrect Users:" + " " + incorrectUsr);
+      $("#correctAverage").html("Correct Answer Percentage: " + "%" + perc);
+
+    });
+
+
+  </script>
+  </body>
+</html>

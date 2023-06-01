@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Swifties Unite!</title>
+  </head>
+  <style>
+
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+    body {
+      text-align: center;
+    }
+    input[type=text], select {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+body {
+  font-family: "San Francisco", system-ui, -apple-system, "Helvetica Neue", Helvetica, sans-serif;
+  background: #9b85ff;
+  color: #fefefe;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+input[type=submit] {
+    font-family: 'Lobster', cursive;
+    width: 50%;
+    background-color: #d993ff;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #d993ff;
+}
+
+h1 {
+  font-family: 'Lobster', cursive;
+  font-weight: normal;
+  font-size: 3rem;
+  margin-top: 0;
+  text-align: center;
+}
+  </style>
+  <body>
+    <h1>Swifties Unite!</h1>  
+
+    <div id="greeting">
+        <p id="questionPending" style="font-size:30px;">Wait for the next question</p>
+        <label for="username" style="font-size:30px;">Username: </label> <input type="text" id="username">
+    </div>
+  
+
+
+    <div id="shortAnswer">
+        <form id="shortanswers" action="">
+            Question: <span id="question" style="font-size:20px;"></span> <br />
+            <label for="answer" style="font-size:30px;">Answer: </label> <input type="text" id="answer"> <br />
+            <input id="submitAnswer" type="submit">
+          </form>   
+    </div>
+
+    <div id="multiAnswer">
+      <form id="multianswers" action="">
+        Question: <span id="mcquestion"></span> <br /> <br />
+        <label for="answer">Answer:</label>
+        <input type="radio" id="answer" name="option" value="option1">
+        <label for="option1">Option 1</label>
+        <input type="radio" id="answer" name="option" value="option2">
+        <label for="option2">Option 2</label>
+        <input type="radio" id="answer" name="option" value="option3">
+        <label for="option3">Option 3</label>
+        <input type="radio" id="answer" name="option" value="option4">
+        <label for="option4">Option 4</label>
+        <br />
+        <input id="submitAnswer" type="submit">
+      </form>
+    </div>
+
+    <div id ="trueOrFalse">
+        <form id="tfanswers" action="">
+            Question: <span id="tfquestion"></span> <br /> <br />
+            <label for="tfanswer">Answer:</label> <input type="radio" id="tfanswer"
+            name="true" value="true"><label for="true">True</label> <input type="radio" id="tfanswer"
+            name="false" value="false"><label for="false">False</label> <br />
+            <input id="submitAnswer" type="submit">
+          </form>
+          
+    </div>
+    <div id="result"></div>
+    <div id="answertext"></div>  <br /><br />
+   
+
+    <div id="timer"></div>
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    
+    
+
+    // Make the connection...
+    var socket = io();
+
+    //hide the form elements for both question types
+    $("#shortAnswer").hide()
+    $("#multiAnswer").hide();
+    $("#trueOrFalse").hide();
+    
+    // If the user clicks the submit button, submit the answer...
+    $('#shortanswers').submit(function(){
+      let answer = $("#answer").val()
+      socket.emit('answerquestion',{ answer, username})
+      return false;
+    });
+
+    $('#multianswers').submit(function(){
+      let answer = $("#multianswer").val()
+      socket.emit('answerquestion',{ answer, username})
+      return false;
+    });
+
+    $('#tfanswers').submit(function(){
+      let answer = $("#tfanswer").val()
+      socket.emit('answerquestion',{ answer, username})
+      return false;
+    });
+
+
+
+    
+    // If a question is received, add it to the HTML page...
+
+    //change the form elements based on the question type
+    socket.on('deliverquestion', function(msg){
+      if(msg.questionType === "short"){
+
+        username = $("#username").val();
+        $("#greeting").hide();
+        $("#trueOrFalse").hide();
+        $("#multiAnswer").hide();
+        $("#shortAnswer").show();
+        $("#submitAnswer").prop('disabled',false);
+        $('#question').html(msg.question);
+        let counter = msg.timeLimit;
+			  let c = msg.timeLimit;
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#submitAnswer").prop('disabled',true);
+              $("#greeting").show();
+              $("#shortAnswer").hide();
+			    }
+		  }, 1000);
+        
+      }
+      if(msg.questionType === "truefalse"){
+        username = $("#username").val();
+        $("#greeting").hide();
+        $("#trueOrFalse").show();
+        $("#shortAnswer").hide();
+        $("#mulitAnswer").hide();
+        $("#submitAnswer").prop('disabled',false);
+        $('#tfquestion').html(msg.question);
+        let counter = msg.timeLimit;
+			  let c = msg.timeLimit;
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#submitAnswer").prop('disabled',true);
+              $("#greeting").show();
+              $("#trueOrFalse").hide();
+			    }
+		  }, 1000);
+      }
+
+      if(msg.questionType === "multichoice"){
+        username = $("#username").val();
+        $("#greeting").hide();
+        $("#trueOrFalse").hide();
+        $("#shortAnswer").hide();
+        $("#multiAnswer").show();
+        $("#submitAnswer").prop('disabled',false);
+        $('#tfquestion').html(msg.question);
+        let counter = msg.timeLimit;
+			  let c = msg.timeLimit;
+			  let k = setInterval(function(){
+		      $("#timer").html(c + "sec");
+			    counter--;
+			    c--;
+			    if(counter === 0) {
+              clearInterval(k);
+              $("#timer").html("");
+              $("#submitAnswer").prop('disabled',true);
+              $("#greeting").show();
+              $("#trueOrFalse").hide();
+			    }
+		  }, 1000);
+      }
+     
+    });
+
+    // If a result is received, show the user...
+    socket.on('resultquestion', function(msg) {
+      if (msg.correct){
+        $("#result").html("Correct!");
+      } else {
+        $("#result").html("Incorrect!");
+      }
+      $("#answertext").html("Correct answer: " + msg.answer);
+     
+    });
+
+  </script>
+  </body>
+</html>
