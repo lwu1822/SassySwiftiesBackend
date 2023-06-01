@@ -356,7 +356,7 @@ class Post(db.Model):
         return None
     
 class Nfts(db.Model):
-    __tablename__ = 'nfts3'
+    __tablename__ = 'nfts4'
     id = db.Column(db.Integer, primary_key=True)
     _userID = db.Column(db.Integer, unique=True)
     _profile = db.Column(db.Integer, unique=False)
