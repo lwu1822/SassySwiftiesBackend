@@ -434,6 +434,57 @@ class Nfts(db.Model):
         db.session.commit()
         return self
 
+class Scoreboard(db.Model):
+    __tablename__ = 'scores'
+    id = db.Column(db.Integer, primary_key=True)
+    _username = db.Column(db.String, unique=False)
+    _score = db.Column(db.Integer, unique=False, nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self, username, score):
+        self._username = username
+        self._score = score
+
+    @property
+    def username(self):
+        return self._username
+
+    @username.setter
+    def username(self, value):
+        self._username = value
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        self._score = value
+
+    def __repr__(self):
+        return f"Scoreboard({self.id}, {self._username}, {self._score}, {self.userID})"
+
+    def create(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except IntegrityError:
+            db.session.remove()
+            return None
+
+    def read(self):
+        return {
+            "id": self.id,
+            "userID": self.userID,
+            "username": self._username,
+            "score": self._score
+        }
+
+
+
+
+
 def string_to_list(string):
     return [x for x in string.split(', ')]
 
