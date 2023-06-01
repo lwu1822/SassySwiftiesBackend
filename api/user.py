@@ -240,17 +240,18 @@ class UserAPI:
         def put(self):
             body = request.get_json()
             token = body.get('token')
-
+            if token is None:
+                return {'message': f'tokens are missing'}, 400
             username = body.get('username')
+            if username is None:
+                return {'message': f'username missing'}, 400
 
             user = User.query.filter_by(_username=username).first()
+            if user is None:
+                return {'message': f'bad username'}, 404
+            user.updateToken(self, user.username, token)
             
-            updateToken(self, user.username, token)
-            
-            if token_data:
-              return token_data
-
-            return {'message': 'placeholder'}
+            return {'message': f'Updated'}, 200
 
           
           
