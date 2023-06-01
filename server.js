@@ -12,12 +12,12 @@ let correctPercentage = 0;
 
 // Return the teacher page
 app.get('/admin', function(req, res){
-  res.sendFile(__dirname + '/kahoot/admin.html');
+  res.sendFile(__dirname + '/templates/admin.html');
 });
 
 // Return the student page
 app.get('/game', function(req, res){
-  res.sendFile(__dirname + '/kahoot/game.html');
+  res.sendFile(__dirname + '/templates/game.html');
 });
 
 // Initially correct answer is blank
@@ -71,6 +71,6 @@ io.on('connection', function(socket){
 });
 
 // Have the server listen...
-http.listen(8000, function(){
-  console.log('listening on *:8000');
+http.listen(portNumber, 'https://taylorswiftes.duckdns.org', function(){
+ console.log('listening on https://taylorswiftes.duckdns.org');
 });
