@@ -237,7 +237,7 @@ class UserAPI:
             
 
     class _UpdateTokens(Resource):
-        def put(self):
+        def post(self):
             body = request.get_json()
             token = body.get('token')
             if token is None:
