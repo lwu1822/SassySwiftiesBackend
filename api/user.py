@@ -249,7 +249,7 @@ class UserAPI:
             user = User.query.filter_by(_username=username).first()
             if user is None:
                 return {'message': f'bad username'}, 404
-            user.updateToken(self, user.username, token)
+            user.updateToken(user.username, token)
             
             return {'message': f'Updated'}, 200
 
