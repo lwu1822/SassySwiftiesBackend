@@ -78,7 +78,7 @@ class NftAPI(Resource):
             if nft is None:
                 return {'message': f'nft not found'}, 404
 
-            profile = body.get('userID')
+            profile = body.get('profile')
             if profile is not None:
                 nft.update(profile)
             
