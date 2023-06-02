@@ -230,12 +230,13 @@ class Post(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # Constructor of a Notes object, initializes of instance variables within object
-    def __init__(self, title, note, image, date, username):
+    def __init__(self, title, note, image, date, username, profile):
         self._title = title
         self._note = note
         self._image = image
         self._date = date
         self._username = username
+        self._profile = profile
         self._likes = 0
         self._likedby = ""
 
