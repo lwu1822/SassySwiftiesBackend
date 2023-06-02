@@ -47,11 +47,10 @@ class FdPostAPI(Resource):
             if username is None:
                 return {'message': f'Requested user at id {id} does not have a username'}, 400
 
-            profile = user.profile
-            if profile is None:
+            image = user.profile
+            if image is None:
                 return {'message': f'Requested user at id {id} does not have a profile'}, 400
             # image = user.get('profile')
-            image = 0
             
             uo = Post(
                 title=title,
