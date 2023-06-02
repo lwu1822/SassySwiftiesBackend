@@ -79,8 +79,6 @@ class NftAPI(Resource):
                 return {'message': f'nft not found'}, 404
 
             profile = body.get('userID')
-            if profile is not None:
-                nft.update(profile)
             
             """Update nft associated with the given id"""
             
@@ -96,7 +94,10 @@ class NftAPI(Resource):
                     nfts.append(False)
                 index = index + 1
             print(nfts)
-            nft.update(nfts)
+            if profile is None:
+                nft.update(nfts)
+            else: 
+                 nft.update(nfts, profile)
             return {'message': f'Updated'}, 200
 
 
