@@ -189,14 +189,14 @@ class User(db.Model):
     
     def updateToken(self, username="", tokens=0, purchase=0):
         # Update nonzero values
-        if Tokens > 0:
-            self.currentTokens = Tokens + self.currentTokens
-        if Tokens > 0:
-            self.allTimeTokens = Tokens + self.allTimeTokens
-        if Tokens > self.matchingMaxTokens:
-            self.matchingMaxTokens = Tokens
-        if Purchase > 0:
-            self.currentTokens = self.currentTokens - Purchase
+        if tokens > 0:
+            self.currentTokens = tokens + self.currentTokens
+        if tokens > 0:
+            self.allTimeTokens = tokens + self.allTimeTokens
+        if tokens > self.matchingMaxTokens:
+            self.matchingMaxTokens = tokens
+        if purchase > 0:
+            self.currentTokens = self.currentTokens - purchase
         db.session.commit()
         return self
     
