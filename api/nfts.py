@@ -64,6 +64,8 @@ class NftAPI(Resource):
     class _Update(Resource):
         def put(self):
             id = request.args.get('id')
+            body = request.get_json()
+
             if id is None:
                 return {'message': f'id {id} is missing'}, 400
 
@@ -76,6 +78,10 @@ class NftAPI(Resource):
             if nft is None:
                 return {'message': f'nft not found'}, 404
 
+            profile = body.get('userID')
+            if profile is not None:
+                nft.update(profile)
+            
             """Update nft associated with the given id"""
             
             nft_money_requirements = [0, 5, 10, 30, 100, 500]
